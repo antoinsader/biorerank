@@ -17,8 +17,27 @@ tokenizer = AutoTokenizer.from_pretrained(conf.encoder_name)
 train_dictionary  = load_dictionary(conf.train_dictionary_path)
 train_queries = load_queries(conf.train_queries_dir)
 
-query_names, query_ids = [row[0] for row in train_queries], [row[1] for row in train_queries]
-dictionary_names, dictionary_ids = [row[0] for row in train_dictionary], [row[1] for row in train_dictionary]
+query_names, query_cuis = [row[0] for row in train_queries], [row[1] for row in train_queries]
+dictionary_names, dictionary_cuis = [row[0] for row in train_dictionary], [row[1] for row in train_dictionary]
+
+dictionary_cuis_set = set(dictionary_cuis)
+
+queries_found_cuis = 0
+for q_cui in query_cuis:
+    if q_cui in dictionary_cuis_set:
+        queries_found_cuis += 1
+
+if queries_found_cuis != len(dictionary_cuis):
+    print(f"some queries cuis were not found in dictionary found/all_queries:{queries_found_cuis}/{len(query_cuis)}.. will try to remove MESH..")
+    dictionary_cuis = [d_id.replace("MESH:", "").lower()  for d_id in dictionary_cuis]
+    query_cuis = [q_id.replace("MESH:", "").lower()  for q_id in query_cuis]
+    dictionary_cuis_set = set(dictionary_cuis)
+
+    queries_found_cuis = 0
+    for q_cui in query_cuis:
+        if q_cui in dictionary_cuis_set:
+            queries_found_cuis += 1
+    assert queries_found_cuis == len(dictionary_cuis), f"queries cuis found number: {queries_found_cuis}, len(dictionary_cuis):{len(dictionary_cuis)} "
 
 
 
@@ -27,8 +46,8 @@ os.makedirs(conf.dictionary_dir, exist_ok=True)
 
 
 
-np.save(conf.queries_mmap_base + conf.ids_file_suffix, query_ids)
-np.save(conf.dictionary_mmap_base + conf.ids_file_suffix, dictionary_ids)
+np.save(conf.queries_mmap_base + conf.cuis_file_suffix, query_cuis)
+np.save(conf.dictionary_mmap_base + conf.cuis_file_suffix, dictionary_cuis)
 
 
 t0 = time.time()

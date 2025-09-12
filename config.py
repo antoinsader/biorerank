@@ -19,7 +19,7 @@ tokenizer_output_dir = "./data/output/tokenized"
 queries_dir, dictionary_dir = tokenizer_output_dir+  '/queries', tokenizer_output_dir+ '/dictionary'
 queries_files_prefix, dictionary_files_prefix = "/queries_", "/dictionary_"
 queries_mmap_base, dictionary_mmap_base = queries_dir + queries_files_prefix, dictionary_dir + dictionary_files_prefix
-ids_file_suffix,tokens_inputs_file_suffix, tokens_attentions_file_suffix = '_ids.npy',  '_inputids.mmap', '_attentionmask.mmap'
+cuis_file_suffix,tokens_inputs_file_suffix, tokens_attentions_file_suffix = '_cuis.npy',  '_inputids.mmap', '_attentionmask.mmap'
 
 
 

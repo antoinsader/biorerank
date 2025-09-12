@@ -237,11 +237,11 @@ class MyDataSet(torch.utils.data.Dataset):
 
             queries_input_ids_mmap_path = confs.queries_mmap_base + confs.tokens_inputs_file_suffix
             queries_attention_mask_mmap_path = confs.queries_mmap_base + confs.tokens_attentions_file_suffix
-            queries_cuis_path = confs.queries_mmap_base + confs.ids_file_suffix
+            queries_cuis_path = confs.queries_mmap_base + confs.cuis_file_suffix
 
             dictionary_input_ids_mmap_path = confs.dictionary_mmap_base + confs.tokens_inputs_file_suffix
             dictionary_attention_mask_mmap_path = confs.dictionary_mmap_base + confs.tokens_attentions_file_suffix
-            dictionary_cuis_path = confs.dictionary_mmap_base + confs.ids_file_suffix
+            dictionary_cuis_path = confs.dictionary_mmap_base + confs.cuis_file_suffix
 
             self.tokens = {
                 "dictionary_inputs":  np.memmap(

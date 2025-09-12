@@ -89,8 +89,8 @@ def main():
 
     #Log in global:
     with open(config.global_log_path, "w") as f:
-        log_global_data[-1]["queries size"]  = len(ds.query_ids)
-        log_global_data[-1]["dictionary size"]  = len(ds.dictionary_ids)
+        log_global_data[-1]["queries size"]  = len(ds.queries_cuis)
+        log_global_data[-1]["dictionary size"]  = len(ds.dictionary_cuis)
         log_global_data[-1]["finished time"]  = training_time_str
         log_global_data[-1]["log details file"]  = log_path
         log_global_data[-1]["encoder dir"]  = result_encoder_dir
