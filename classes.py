@@ -45,7 +45,8 @@ class Reranker(nn.Module):
         self.topk = config.topk
         self.use_cuda = config.use_cuda
 
-    def forward(self, queries_tokens, candidates_tokens):
+    def forward(self, batch_x):
+        queries_tokens, candidates_tokens =  batch_x
         batch_size, topk, max_length = candidates_tokens['input_ids'].shape
         assert topk == self.topk and max_length == self.max_length
 
