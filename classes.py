@@ -208,7 +208,7 @@ class FaissIndex():
                 out_chunk = out_chunk.contiguous()
 
 
-                _, chunk_cand_idxs = self.faiss_index.search(out_chunk, self.topk)
+                _, chunk_cand_idxs = self.index.search(out_chunk, self.topk)
 
 
                 if self.use_cuda:
