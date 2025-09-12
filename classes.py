@@ -235,6 +235,7 @@ class MyDataSet(torch.utils.data.Dataset):
             self.d_candidate_idxs = None
             self.labels_per_query = None
 
+            self.draft_dir = confs.draft_dir
 
             queries_input_ids_mmap_path = confs.queries_mmap_base + confs.tokens_inputs_file_suffix
             queries_attention_mask_mmap_path = confs.queries_mmap_base + confs.tokens_attentions_file_suffix
@@ -242,7 +243,7 @@ class MyDataSet(torch.utils.data.Dataset):
 
             dictionary_input_ids_mmap_path = confs.dictionary_mmap_base + confs.tokens_inputs_file_suffix
             dictionary_attention_mask_mmap_path = confs.dictionary_mmap_base + confs.tokens_attentions_file_suffix
-            dictionary_cuis_path = confs.dictionary_mmap_base + confs.cuis_file_suffix
+            self.dictionary_cuis_path = confs.dictionary_mmap_base + confs.cuis_file_suffix
 
             self.tokens = {
                 "dictionary_inputs":  np.memmap(
@@ -271,7 +272,7 @@ class MyDataSet(torch.utils.data.Dataset):
                 )
             }
             self.queries_cuis = np.load(queries_cuis_path)
-            self.dictionary_cuis = np.load(dictionary_cuis_path)
+            self.dictionary_cuis = np.load(self.dictionary_cuis_path)
 
             self.cui_to_idx_dictionary_map = {}
             for dictionary_idx, dictionary_cui in enumerate(self.dictionary_cuis):
@@ -332,6 +333,11 @@ class MyDataSet(torch.utils.data.Dataset):
                 assert query_cui in set(self.cui_to_idx_dictionary_map.keys()), f"query_idx: {query_idx}, query_cui: {query_cui}, len(map_cui_to_idxdictionary): {len(self.cui_to_idx_dictionary_map)} "
                 golden_query_dictionary_idx = self.cui_to_idx_dictionary_map[query_cui]
 
+                #sanity check 
+                for cand_idx in cand_idxs:
+                    if cand_idx not in self.dictionary_cuis:
+                        np.save(self.draft_dir + "/candidate_idxs.npy", candidate_idxs_old)
+                        raise Exception(f"Candidate idx: {cand_idx} is not in self.dictionary_cuis, you can check the cuis in file {self.dictionary_cuis_path}")
 
                 labels = np.fromiter(
                     (
