@@ -353,7 +353,7 @@ class MyDataSet(torch.utils.data.Dataset):
 class MetricsLogger:
     def __init__(self, logger, confs, tag="train"):
         self.use_cuda = confs.use_cuda
-        self.logger = confs.logger
+        self.logger = logger
         self.tag = tag
         self.process = psutil.Process(os.getpid())
         
@@ -363,7 +363,7 @@ class MetricsLogger:
 
 
     def current_cpu_mem_usage(self):
-        rss = self.proc.memory_info().rss / (1024 * 2)
+        rss = self.process.memory_info().rss / (1024 * 2)
         self.cpu_memory_used = rss
         return rss
 
