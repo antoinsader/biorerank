@@ -219,7 +219,7 @@ class FaissIndex():
 
 
 
-def load_mmap_shape(self, base):
+def load_mmap_shape(base):
     with open(base+".json") as f:
         meta = json.load(f)
     return tuple(meta["shape"])
