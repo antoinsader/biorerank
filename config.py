@@ -1,8 +1,8 @@
 import torch
 
 # [GENERAL]
-train_dictionary_path = "./data/raw/train_dictionary.txt"
-train_queries_dir= "./data/raw/traindev/"
+train_dictionary_path = "./data/data-ncbi-fair/train_dictionary.txt"
+train_queries_dir= "./data/data-ncbi-fair/traindev/"
 output_dir = "./data/output"
 encoder_name = "dmis-lab/biobert-base-cased-v1.1"
 use_cuda = torch.cuda.is_available()
