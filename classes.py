@@ -16,6 +16,7 @@ from transformers import AutoModel
 
 import faiss
 import faiss.contrib.torch_utils
+from utils import save_pkl
 
 
 class Reranker(nn.Module):
@@ -275,6 +276,8 @@ class MyDataSet(torch.utils.data.Dataset):
             for dictionary_idx, dictionary_cui in enumerate(self.dictionary_cuis):
                 self.cui_to_idx_dictionary_map.setdefault(dictionary_cui, []).append(dictionary_idx)
 
+
+            save_pkl(self.cui_to_idx_dictionary_map, "./data/draft/cui_to_idx_dictionary_map.pkl")
             assert self.tokens["query_inputs"].shape == self.tokens["query_attention"].shape == (len(self.queries_cuis),self.max_length)
             assert self.tokens["dictionary_inputs"].shape == self.tokens["dictionary_attention"].shape == (len(self.dictionary_cuis),self.max_length)
 

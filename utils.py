@@ -6,8 +6,7 @@ import json
 import logging
 import json
 from datetime import datetime
-
-
+import pickle
 
 def init_logging(confs, logger):
     global_log_path = confs.global_log_path
@@ -133,4 +132,13 @@ def tokenize_names_with_memmap(
     input_ids_array.flush()
     att_mask_array.flush()
     return True
+
+
+
+def save_pkl(ar, fp):
+    with open(fp, 'wb') as f:
+        pickle.dump(ar, f)
+def get_pkl(fp):
+    with open(fp, "rb") as f:
+        return pickle.load(f)
 

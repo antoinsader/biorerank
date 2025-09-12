@@ -27,10 +27,15 @@ LOGGER = logging.getLogger()
 def main():
     log_path,  log_global_data, current_global_log_number= init_logging(confs=config, logger=LOGGER)
 
+    os.makedirs("./data/draft", exist_ok=True)
+
     metrics = MetricsLogger(logger=LOGGER, confs=config)
 
     t0 = time.time()
     ds = MyDataSet(confs=config)
+
+    LOGGER.info(f"dictionary_cuis: {len(ds.dictionary_cuis)} cuis, queries_cuis: ${len(ds.queries_cuis)} cuis")
+
     data_loader = DataLoader(
         ds,
         batch_size=config.train_batch_size,
