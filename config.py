@@ -5,6 +5,9 @@ train_dictionary_path = "./data/data-ncbi-fair/train_dictionary.txt"
 train_queries_dir= "./data/data-ncbi-fair/traindev/"
 output_dir = "./data/output"
 encoder_name = "dmis-lab/biobert-base-cased-v1.1"
+global_log_path = "./data/global_log.json"
+logs_dir = "./data/logs"
+
 use_cuda = torch.cuda.is_available()
 use_fp16 = True
 amp_dtype = torch.bfloat16
