@@ -54,7 +54,7 @@ def main():
         faiss_index.build_index()
         metrics.log_event(f"epoch_{epoch}: faiss_index_buid", t0)
         t0 = time.time()
-        dictionary_candidates_idxs = faiss_index.search()
+        dictionary_candidates_idxs = faiss_index.search_candidates()
         metrics.log_event(f"epoch_{epoch}: faiss_index_search", t0)
 
         ds.set_dense_candidate_idxs(dictionary_candidates_idxs)
