@@ -74,7 +74,7 @@ def main():
 
 
         if epoch == config.num_epochs:
-            model.save_state(config.output_dir)
+            model.save_state(config.result_encoder_dir)
 
     metrics.log_event(f"finished training", t0=start)
 
