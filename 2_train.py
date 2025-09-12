@@ -44,7 +44,7 @@ def main():
     metrics.log_event("faiss_index_init", t0)
 
 
-    os.path.makedirs(config.result_encoder_dir, exists_ok=True)
+    os.makedirs(config.result_encoder_dir, exists_ok=True)
 
 
     start = time.time()
