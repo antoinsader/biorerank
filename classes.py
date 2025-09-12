@@ -20,6 +20,7 @@ import faiss.contrib.torch_utils
 
 class Reranker(nn.Module):
     def __init__(self, config):
+        super(Reranker, self).__init__()
         encoder = AutoModel.from_pretrained(config.encoder_name, use_safetensors=True,)
         if config.use_cuda:
             encoder = encoder.to("cuda")
@@ -353,6 +354,7 @@ class MyDataSet(torch.utils.data.Dataset):
 class MetricsLogger:
     def __init__(self, logger, confs, tag="train"):
         self.use_cuda = confs.use_cuda
+        self.device = "cuda" if self.use_cuda else "cpu"
         self.logger = logger
         self.tag = tag
         self.process = psutil.Process(os.getpid())
@@ -360,7 +362,6 @@ class MetricsLogger:
         self.cpu_memory_used = 0.0
         self.messages = []
         self.one_time_events_set = set()
-
 
     def current_cpu_mem_usage(self):
         rss = self.process.memory_info().rss / (1024 * 2)
