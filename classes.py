@@ -111,7 +111,6 @@ class FaissIndex():
         assert self.hidden_size is not None
 
 
-        assert os.path.isfile(config.tokenized_queries_mmap_base) and  os.path.isfile(config.tokenized_dictionary_mmap_base) and os.path.isfile(config.tokenized_inputs_suffix) and  os.path.isfile(config.tokenized_att_suffix)
 
         self.tokens  = tokens
 
