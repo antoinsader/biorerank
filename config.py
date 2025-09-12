@@ -24,7 +24,7 @@ ids_file_suffix,tokens_inputs_file_suffix, tokens_attentions_file_suffix = '_ids
 
 
 # [training]
-result_encoder_dir = output_dir + "/encoder"
+result_encoders_dir = output_dir + "/encoders"
 num_epochs  = 10
 topk = 20
 faiss_build_batch_size = 4096

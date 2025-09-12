@@ -25,7 +25,7 @@ LOGGER = logging.getLogger()
 
 
 def main():
-    log_path,  log_global_data= init_logging(confs=config, logger=LOGGER)
+    log_path,  log_global_data, current_global_log_number= init_logging(confs=config, logger=LOGGER)
 
     metrics = MetricsLogger(logger=LOGGER, confs=config)
 
@@ -43,8 +43,8 @@ def main():
     faiss_index = FaissIndex(config=config, encoder=model.encoder, tokens=ds.tokens)
     metrics.log_event("faiss_index_init", t0)
 
-
-    os.makedirs(config.result_encoder_dir, exists_ok=True)
+    result_encoder_dir = config.result_encoders_dir + f"/encoder_{current_global_log_number}/" 
+    os.makedirs(result_encoder_dir, exist_ok=True)
 
 
     start = time.time()
@@ -74,7 +74,7 @@ def main():
 
 
         if epoch == config.num_epochs:
-            model.save_state(config.result_encoder_dir)
+            model.save_state(result_encoder_dir)
 
     metrics.log_event(f"finished training", t0=start)
 
@@ -88,6 +88,7 @@ def main():
         log_global_data[-1]["dictionary size"]  = len(ds.dictionary_ids)
         log_global_data[-1]["finished time"]  = training_time_str
         log_global_data[-1]["log details file"]  = log_path
+        log_global_data[-1]["encoder dir"]  = result_encoder_dir
         json.dump(log_global_data,f)
 
     LOGGER.info(f"Training Time: {training_time_str} ")

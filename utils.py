@@ -45,7 +45,7 @@ def init_logging(confs, logger):
     logger.addHandler(file_handler)
 
 
-    return log_path,  log_global_data
+    return log_path,  log_global_data,current_global_log_number
 
 
 
