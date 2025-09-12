@@ -324,7 +324,8 @@ class MyDataSet(torch.utils.data.Dataset):
             new_candidates = []
             for query_idx, cand_idxs in enumerate(candidate_idxs_old):
                 query_cui = self.queries_cuis[query_idx]
-                assert query_cui in set(self.cui_to_idx_dictionary_map.keys())
+
+                assert query_cui in set(self.cui_to_idx_dictionary_map.keys()), f"query_cui: {query_cui}, len(map_cui_to_idxdictionary): {len(self.cui_to_idx_dictionary_map)} "
                 golden_query_dictionary_idx = self.cui_to_idx_dictionary_map[query_cui]
 
 
