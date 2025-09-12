@@ -51,7 +51,7 @@ def main():
 
     for epoch in  tqdm(range(1,config.num_epochs+1)):   
         t0 = time.time()
-        faiss_index.build()
+        faiss_index.build_index()
         metrics.log_event(f"epoch_{epoch}: faiss_index_buid", t0)
         t0 = time.time()
         dictionary_candidates_idxs = faiss_index.search()
