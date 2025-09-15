@@ -173,7 +173,7 @@ class FaissIndex():
 
                 assert out_chunk is not None
                 out_chunk = out_chunk.contiguous()
-                ids = np.arange(start,end)
+                ids = torch.arange(start,end)
                 if self.index.ntotal == 0:
                     self.index.add_with_ids(out_chunk, ids)
                 else:
