@@ -147,7 +147,7 @@ class FaissIndex():
 
         assert tokens_size > 0 and max_length == self.max_length
         batch_size=self.faiss_build_batch_size
-
+        self.index.reset()
 
         self.encoder.eval()
         with torch.inference_mode():
@@ -173,11 +173,8 @@ class FaissIndex():
 
                 assert out_chunk is not None
                 out_chunk = out_chunk.contiguous()
-                ids = torch.arange(start,end)
-                if self.index.ntotal == 0:
-                    self.index.add_with_ids(out_chunk, ids)
-                else:
-                    self.index.update_with_ids(out_chunk, ids)
+                self.index.add(out_chunk)
+
                 del out_chunk, chunk_input_ids,chunk_att_mask
 
         assert self.index.ntotal == self.tokens["dictionary_inputs"].shape[0], f"index: {self.index.ntotal}, dictionary len: {self.tokens['dictionary_inputs'].shape[0]}"
