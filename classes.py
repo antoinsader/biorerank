@@ -325,6 +325,7 @@ class MyDataSet(torch.utils.data.Dataset):
 
             candidate_idxs_flat = candidate_indexs.flatten()
             M = len(self.dictionary_cuis)
+            np.save("./data/draft/cands_flat.npy", c_idx)
             for c_idx in candidate_idxs_flat:
                 assert c_idx < M, f"Candidate: {c_idx} is bigger than {M}"
 
