@@ -333,11 +333,6 @@ class MyDataSet(torch.utils.data.Dataset):
                 assert query_cui in set(self.cui_to_idx_dictionary_map.keys()), f"query_idx: {query_idx}, query_cui: {query_cui}, len(map_cui_to_idxdictionary): {len(self.cui_to_idx_dictionary_map)} "
                 golden_query_dictionary_idx = self.cui_to_idx_dictionary_map[query_cui]
 
-                #sanity check 
-                for cand_idx in cand_idxs:
-                    if cand_idx not in self.dictionary_cuis:
-                        np.save(self.draft_dir + "/candidate_idxs.npy", candidate_idxs_old)
-                        raise Exception(f"Candidate idx: {cand_idx} is not in self.dictionary_cuis, you can check the cuis in file {self.dictionary_cuis_path}")
 
                 labels = np.fromiter(
                     (
