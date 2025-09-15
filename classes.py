@@ -176,6 +176,8 @@ class FaissIndex():
                 self.index.add(out_chunk)
                 del out_chunk, chunk_input_ids,chunk_att_mask
 
+        assert self.index.ntotal == self.tokens["dictionary_inputs"].shape[0], f"index: {self.index.ntotal}, dictionary len: {self.tokens['dictionary_inputs'].shape[0]}"
+
     def search_candidates(self):
         (tokens_size, max_length ) = self.tokens["query_inputs"].shape
         assert tokens_size > 0 and max_length == self.max_length
