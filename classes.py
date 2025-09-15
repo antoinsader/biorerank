@@ -323,6 +323,14 @@ class MyDataSet(torch.utils.data.Dataset):
             """
             candidate_idxs_old = candidate_indexs
 
+            candidate_idxs_flat = candidate_indexs.flatten()
+            M = len(self.dictionary_cuis)
+            for c_idx in candidate_idxs_flat:
+                assert c_idx < M, f"Candidate: {c_idx} is bigger than {M}"
+
+
+
+
 
             #set labels for after in getitem, and set new_candidates which will have golden candidate
             labels_per_query = []
@@ -336,9 +344,9 @@ class MyDataSet(torch.utils.data.Dataset):
 
                 labels = np.fromiter(
                     (
-                        1.0 if query_cui == self.dictionary_cuis[candidate_idx]
+                        1.0 if query_cui == self.dictionary_cuis[c_idx]
                         else 0.0
-                        for candidate_idx in cand_idxs
+                        for c_idx in cand_idxs
                     ),
                     dtype=np.float32,
                     count=len(cand_idxs)
