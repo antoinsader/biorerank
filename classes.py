@@ -173,7 +173,11 @@ class FaissIndex():
 
                 assert out_chunk is not None
                 out_chunk = out_chunk.contiguous()
-                self.index.add(out_chunk)
+                ids = np.arange(start,end)
+                if self.index.ntotal == 0:
+                    self.index.add_with_ids(out_chunk, ids)
+                else:
+                    self.index.update_with_ids(out_chunk, ids)
                 del out_chunk, chunk_input_ids,chunk_att_mask
 
         assert self.index.ntotal == self.tokens["dictionary_inputs"].shape[0], f"index: {self.index.ntotal}, dictionary len: {self.tokens['dictionary_inputs'].shape[0]}"
