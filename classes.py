@@ -25,13 +25,9 @@ class Reranker(nn.Module):
         self.use_cuda = config.use_cuda
         self.device = "cuda" if config.use_cuda else "cpu"
         self.amp_dtype = config.amp_dtype
+        self.learning_rate = config.learning_rate
+        self.weight_decay = config.weight_decay
 
-        self.optimizer = optim.AdamW(
-            self.encoder.parameters(),
-            lr=config.learning_rate,
-            weight_decay=config.weight_decay,
-            fused=config.use_cuda
-        )
         self.criterion = self.marginal_nll
 
 
@@ -45,6 +41,13 @@ class Reranker(nn.Module):
         if self.use_cuda:
             self.encoder = self.encoder.to("cuda")
             self.encoder = torch.compile(self.encoder)
+
+        self.optimizer = optim.AdamW(
+            self.encoder.parameters(),
+            lr=self.learning_rate,
+            weight_decay=self.weight_decay,
+            fused=self.use_cuda
+        )
         self.hidden_size = getattr(getattr(self.encoder, "config", None), "hidden_size", None)
 
 
