@@ -81,11 +81,19 @@ def main():
             
             
             with torch.no_grad():
-                preds = scores.argmax(dim=1)
-                print(f"scores shape: {scores.shape}, preds shape: {preds}, batch_y shape: {batch_y.shape}")
-                correct_att1 += (preds == batch_y).sum().item()
-                top5 = scores.topk(5, dim=1).indices #(batch_size, 5)
-                correct_att5 += (top5 == batch_y.unsqueeze(1)).any(dim=1).sum().item()
+                # batch_y shape: (batch_size, topk)
+                batch_y_true_indices = batch_y.argmax(dim=1) # (batch_size) #for each query what is the index of label 1
+
+                #acc@1
+                #scores  shape: (batch_size, topk)
+                pred_true_indices = scores.argmax(1) #(batch_size) #for each query what is the index where scores are the maximum
+                correct_att1 += (pred_true_indices == batch_y_true_indices).sum().item()
+
+                #acc@5
+                pred_true_indices_top5 = scores.topk(5, dim=1).indices #(batch_size, 5)
+                correct_att5 += (pred_true_indices_top5 == batch_y_true_indices.unsqueeze(1)).any(dim=1).sum().item()
+
+
                 total += batch_y.shape[0]
 
         metrics.log_event(f"epoch_{epoch}: batches loop finished", t0 )
