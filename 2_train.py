@@ -42,6 +42,7 @@ def main():
         shuffle=True
     )
     model = Reranker(config)
+    model.load_encoder(config.encoder_name)
     metrics.log_event("load_classes", t0)
 
     t0 = time.time()
@@ -65,17 +66,31 @@ def main():
         ds.set_dense_candidate_idxs(dictionary_candidates_idxs)
 
         train_loss = 0.0
+        correct_att1, correct_att5, total = 0, 0, 0
         model.train()
         t0=time.time()
         for i, data in tqdm(enumerate(data_loader), total=len(data_loader), unit="batch", desc="Training batches"):
             model.optimizer.zero_grad()
             batch_x, batch_y = data
-            scores = model(batch_x)
+            queries_tokens, candidates_tokens = batch_x
+            scores = model(queries_tokens, candidates_tokens)
             loss = model.get_loss(scores, batch_y)
             loss.backward()
             model.optimizer.step()
             train_loss += loss.item()
-        metrics.log_event(f"epoch_{epoch}: batches loop finished", t0)
+            
+            
+            with torch.no_grad():
+                preds = scores.argmax(dim=1)
+                correct_att1 += (preds == batch_y).sum().item()
+                top5 = scores.topk(5, dim=1).indices #(batch_size, 5)
+                correct_att5 += (top5 == batch_y.unsqueeze(1)).any(dim=1).sum().item()
+                total += batch_y.shape[0]
+
+        metrics.log_event(f"epoch_{epoch}: batches loop finished", t0 )
+        acc1 = correct_att1 / total
+        acc5 = correct_att5 / total
+        LOGGER.info(f"Epoch {epoch} accuracy: acc@1: {acc1:.4f}, acc@5: {acc5:.4f}")
 
 
         if epoch == config.num_epochs:

@@ -22,14 +22,8 @@ from utils import save_pkl
 class Reranker(nn.Module):
     def __init__(self, config):
         super(Reranker, self).__init__()
-        encoder = AutoModel.from_pretrained(config.encoder_name, use_safetensors=True,)
-        if config.use_cuda:
-            encoder = encoder.to("cuda")
-            encoder = torch.compile(encoder)
-        self.encoder =encoder
         self.use_cuda = config.use_cuda
         self.device = "cuda" if config.use_cuda else "cpu"
-        self.hidden_size = getattr(getattr(encoder, "config", None), "hidden_size", None)
         self.amp_dtype = config.amp_dtype
 
         self.optimizer = optim.AdamW(
@@ -45,8 +39,17 @@ class Reranker(nn.Module):
         self.topk = config.topk
         self.use_cuda = config.use_cuda
 
-    def forward(self, batch_x):
-        queries_tokens, candidates_tokens =  batch_x
+    def load_encoder(self,path):
+        self.encoder = AutoModel.from_pretrained(path, use_safetensors=True)
+        if self.use_cuda:
+            self.encoder = self.encoder.to("cuda")
+            self.encoder = torch.compile(self.encoder)
+        self.hidden_size = getattr(getattr(self.encoder, "config", None), "hidden_size", None)
+
+
+
+    def forward(self, queries_tokens, candidates_tokens):
+      
         batch_size, topk, max_length = candidates_tokens['input_ids'].shape
         assert topk == self.topk and max_length == self.max_length
 
@@ -100,6 +103,7 @@ class Reranker(nn.Module):
         else:
             loss = loss.mean()
         return loss
+
 
 
 class FaissIndex():
