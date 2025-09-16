@@ -82,8 +82,7 @@ def main():
             
             with torch.no_grad():
                 # batch_y shape: (batch_size, topk)
-                batch_y_true_indices = batch_y.argmax(dim=1) # (batch_size) #for each query what is the index of label 1
-
+                batch_y_true_indices = batch_y.argmax(dim=1).to(scores.device) # (batch_size) #for each query what is the index of label 1
                 #acc@1
                 #scores  shape: (batch_size, topk)
                 pred_true_indices = scores.argmax(1) #(batch_size) #for each query what is the index where scores are the maximum
