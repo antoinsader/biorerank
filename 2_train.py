@@ -82,6 +82,7 @@ def main():
             
             with torch.no_grad():
                 preds = scores.argmax(dim=1)
+                print(f"scores shape: {scores.shape}, preds shape: {preds}, batch_y shape: {batch_y.shape}")
                 correct_att1 += (preds == batch_y).sum().item()
                 top5 = scores.topk(5, dim=1).indices #(batch_size, 5)
                 correct_att5 += (top5 == batch_y.unsqueeze(1)).any(dim=1).sum().item()
