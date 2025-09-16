@@ -38,6 +38,7 @@ class Reranker(nn.Module):
         self.max_length = config.max_length
         self.topk = config.topk
         self.use_cuda = config.use_cuda
+        self.encoder = None
 
     def load_encoder(self,path):
         self.encoder = AutoModel.from_pretrained(path, use_safetensors=True)
