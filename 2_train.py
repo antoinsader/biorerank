@@ -55,6 +55,9 @@ def main():
 
     start = time.time()
 
+    best_acc_1, acc_5, best_epoch = 0.0,.0,0
+
+
     for epoch in  tqdm(range(1,config.num_epochs+1)):   
         t0 = time.time()
         faiss_index.build_index()
@@ -78,8 +81,7 @@ def main():
             loss.backward()
             model.optimizer.step()
             train_loss += loss.item()
-            
-            
+
             with torch.no_grad():
                 # batch_y shape: (batch_size, topk)
                 batch_y_true_indices = batch_y.argmax(dim=1).to(scores.device) # (batch_size) #for each query what is the index of label 1
@@ -96,13 +98,21 @@ def main():
                 total += batch_y.shape[0]
 
         metrics.log_event(f"epoch_{epoch}: batches loop finished", t0 )
-        acc1 = correct_att1 / total
-        acc5 = correct_att5 / total
-        LOGGER.info(f"Epoch {epoch} accuracy: acc@1: {acc1:.4f}, acc@5: {acc5:.4f}")
+        accuracy_1 = correct_att1 / total
+        accuracy_5 = correct_att5 / total
 
-
-        if epoch == config.num_epochs:
+        if accuracy_1 > best_acc_1:
+            best_acc_1 = accuracy_1
+            best_epoch = epoch
+            acc_5 = accuracy_5
             model.save_state(result_encoder_dir)
+
+
+
+
+        LOGGER.info(f"Epoch {epoch} accuracy: acc@1: {accuracy_1:.4f}, acc@5: {accuracy_5:.4f}")
+
+
 
     metrics.log_event(f"finished training", t0=start)
 
@@ -117,6 +127,9 @@ def main():
         log_global_data[-1]["finished time"]  = training_time_str
         log_global_data[-1]["log details file"]  = log_path
         log_global_data[-1]["encoder dir"]  = result_encoder_dir
+        log_global_data[-1]["encoder epoch"]  = best_epoch
+        log_global_data[-1]["acc@1"]  = best_acc_1
+        log_global_data[-1]["acc@5"]  = acc_5
         json.dump(log_global_data,f)
 
     LOGGER.info(f"Training Time: {training_time_str} ")
