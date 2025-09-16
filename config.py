@@ -26,7 +26,7 @@ cuis_file_suffix,tokens_inputs_file_suffix, tokens_attentions_file_suffix = '_cu
 
 # [training]
 result_encoders_dir = output_dir + "/encoders"
-num_epochs  = 10
+num_epochs  = 25
 topk = 20
 faiss_build_batch_size = 4096
 faiss_search_batch_size = 4096
